@@ -106,7 +106,6 @@ Here are the RoR migrations and models that are required:
       has_many :countries, through: :country_languages
 
       validates :code, presence: true, :uniqueness => true
-      validates :name, presence: true
     end
 
 
