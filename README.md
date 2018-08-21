@@ -32,7 +32,7 @@ Here are the RoR migrations and models that are required:
           t.string :phone
           t.string :capital
           t.string :currency
-          t.integer :continent_id
+          t.integer :continent_id, :null => false
 
           t.timestamps
         end
@@ -67,3 +67,47 @@ Here are the RoR migrations and models that are required:
         add_index :languages, :code, unique: true
       end
     end
+
+*models/continent.rb*
+
+    class Continent < ApplicationRecord
+      has_many :countries
+
+      validates :name, presence: true, :uniqueness => true
+    end
+    
+*models/country.rb*
+
+    class Country < ApplicationRecord
+      belongs_to :continent
+
+      has_many :country_languages
+      has_many :languages, through: :country_languages
+
+      validates :code, presence: true, :uniqueness => true
+      validates :name, presence: true
+      validates :continent_id, presence: true
+    end
+    
+*models/country_language.rb*
+
+    class CountryLanguage < ApplicationRecord
+      belongs_to :country
+      belongs_to :language
+
+      validates :country_id, presence: true
+      validates :language_id, presence: true
+    end
+    
+*modles/language.rb*
+
+    class Language < ApplicationRecord
+      has_many :country_languages
+      has_many :countries, through: :country_languages
+
+      validates :code, presence: true, :uniqueness => true
+      validates :name, presence: true
+    end
+
+
+
